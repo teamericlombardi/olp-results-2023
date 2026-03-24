@@ -198,6 +198,7 @@
         <option value="es_r3_desc">Round 3: Erskine-Smith % ↓</option>
         <option value="crombie_r1_desc">Round 1: Crombie % ↓</option>
         <option value="eligible_desc">Eligible members ↓</option>
+        <option value="votes_cast_desc">Votes cast ↓</option>
       </select>
     </div>
     <p class="result-count" id="result-count"></p>
@@ -803,6 +804,7 @@ function sortAssociations(list){
       case 'es_r3_desc': return (b.r3?.esp||0)-(a.r3?.esp||0);
       case 'crombie_r1_desc': return (b.r1?.cp||0)-(a.r1?.cp||0);
       case 'eligible_desc': return (b.r1?.eligible||0)-(a.r1?.eligible||0);
+      case 'votes_cast_desc': return (b.r1?.cast||0)-(a.r1?.cast||0);
       default: return 0;
     }
   });
