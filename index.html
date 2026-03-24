@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 <title>2023 Ontario Liberal Leadership Results</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -69,7 +69,7 @@
   /* SEARCH */
   .search-wrap{position:relative;margin-bottom:14px}
   .search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none}
-  #search-input{width:100%;padding:10px 14px 10px 36px;border:1px solid var(--gray-200);border-radius:var(--radius);font-family:var(--font-sans);font-size:15px;background:#fff;outline:none;color:var(--gray-800)}
+  #search-input{width:100%;padding:10px 14px 10px 36px;border:1px solid var(--gray-200);border-radius:var(--radius);font-family:var(--font-sans);font-size:16px;background:#fff;outline:none;color:var(--gray-800);-webkit-appearance:none;appearance:none}
   #search-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.12)}
   .result-count{font-size:12px;color:var(--gray-400);margin-bottom:10px}
 
@@ -90,6 +90,20 @@
   .mini-seg{height:100%}
   .chevron{color:var(--gray-400);transition:transform .2s;flex-shrink:0}
   .assoc-item.open .chevron{transform:rotate(180deg)}
+
+  @media(max-width:640px){
+    .assoc-header{align-items:flex-start}
+    .assoc-summary{display:grid;grid-template-columns:repeat(2,max-content);align-items:center;justify-content:end;gap:6px;row-gap:4px;flex-shrink:0}
+    .assoc-meta-chip{font-size:10px;padding:2px 6px}
+    .mini-bar{display:none}
+    .assoc-name{white-space:normal;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  }
+  @media(max-width:420px){
+    .assoc-header{gap:8px}
+    .assoc-left{flex:1 1 auto;min-width:0}
+    .assoc-summary{grid-template-columns:repeat(2,max-content);justify-content:end}
+    .chevron{align-self:flex-start;margin-top:2px}
+  }
 
   /* DETAIL PANEL */
   .assoc-detail{display:none;border-top:0.5px solid var(--gray-100);padding:14px 14px 16px;background:var(--gray-50)}
