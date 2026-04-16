@@ -168,13 +168,6 @@
     <p>2023 race · Three rounds of voting · 143 riding associations + clubs</p>
   </div>
 </header>
-<div class="winner-banner">
-  <div class="container" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span class="winner-label">Winner</span>
-    <span class="winner-name">Bonnie Crombie</span>
-    <span style="font-size:12px;color:var(--red-mid);">6,911 pts after Round 3 · 53.5% of valid points</span>
-  </div>
-</div>
 
 <div class="container">
   <!-- ROUND SUMMARIES -->
@@ -206,12 +199,9 @@
       <label for="sort-select">Sort by</label>
       <select id="sort-select" class="sort-select">
         <option value="name">Name A–Z</option>
-        <option value="crombie_r3_desc">Round 3: Crombie % ↓</option>
-        <option value="es_r3_desc">Round 3: Erskine-Smith % ↓</option>
-        <option value="crombie_r1_desc">Round 1: Crombie % ↓</option>
-        <option value="pts_per_vote_desc">Pts per vote ↓</option>
         <option value="eligible_desc">Eligible members ↓</option>
         <option value="votes_cast_desc">Votes cast ↓</option>
+        <option value="pts_per_vote_desc">Pts per vote ↓</option>
       </select>
     </div>
     <p class="result-count" id="result-count"></p>
@@ -759,13 +749,14 @@ function buildBenchmarks(){
     const medCast=median(items.map(a=>a.r1.cast));
     const medPtsPerVote=median(items.map(a=>pointsPerVote(a.r1.pts,a.r1.valid)));
     return `<div class="benchmark-card">
-      <div class="benchmark-title">${g.label}</div>
+      <div class="benchmark-title">${g.label} (${fmtVotes(items.length)} total)</div>
       <div class="benchmark-list">
         <div class="benchmark-item"><span>Median eligible</span><strong>${fmtVotes(Math.round(medEligible))}</strong></div>
         <div class="benchmark-item"><span>Median cast</span><strong>${fmtVotes(Math.round(medCast))}</strong></div>
         <div class="benchmark-item"><span>Median pts/vote</span><strong>${fmtPtsPerVote(medPtsPerVote)}</strong></div>
-      </div>
-    </div>`;
+        </div>
+      </div>`;
+      
   }).join('');
 }
 
@@ -851,12 +842,9 @@ function sortAssociations(list){
   return [...list].sort((a,b)=>{
     switch(sortMode){
       case 'name': return a.name.localeCompare(b.name,'en');
-      case 'crombie_r3_desc': return (b.r3?.cp||0)-(a.r3?.cp||0);
-      case 'es_r3_desc': return (b.r3?.esp||0)-(a.r3?.esp||0);
-      case 'crombie_r1_desc': return (b.r1?.cp||0)-(a.r1?.cp||0);
-      case 'pts_per_vote_desc': return pointsPerVote((b.r1?.pts||0),(b.r1?.valid||0)) - pointsPerVote((a.r1?.pts||0),(a.r1?.valid||0));
       case 'eligible_desc': return (b.r1?.eligible||0)-(a.r1?.eligible||0);
       case 'votes_cast_desc': return (b.r1?.cast||0)-(a.r1?.cast||0);
+      case 'pts_per_vote_desc': return pointsPerVote((b.r1?.pts||0),(b.r1?.valid||0)) - pointsPerVote((a.r1?.pts||0),(a.r1?.valid||0));
       default: return 0;
     }
   });
