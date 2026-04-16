@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<title>2023 Ontario Liberal Leadership Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --red:#C8102E;--red-light:#FDEDEF;--red-mid:#F4A5AF;--red-dark:#8A0B1F;
+    --blue:#1D4E89;--blue-light:#EAF0F8;
+    --green:#1A6B3C;--green-light:#EAF5EF;
+    --amber:#9C5A00;--amber-light:#FEF4E3;
+    --gray-50:#F9F8F7;--gray-100:#EEECEA;--gray-200:#D8D6D2;--gray-400:#9C9994;--gray-600:#5E5C59;--gray-800:#2C2B29;
+    --font-serif:'DM Serif Display',Georgia,serif;
+    --font-sans:'DM Sans',system-ui,sans-serif;
+    --radius:10px;--radius-sm:6px;
+  }
+  body{font-family:var(--font-sans);background:var(--gray-50);color:var(--gray-800);font-size:15px;line-height:1.55}
+  a{color:inherit;text-decoration:none}
+
+  /* HEADER */
+  .site-header{background:var(--red);color:#fff;padding:20px 20px 18px}
+  .site-header h1{font-family:var(--font-serif);font-size:clamp(22px,5vw,34px);font-weight:400;line-height:1.15;letter-spacing:-0.3px}
+  .site-header p{font-size:13px;opacity:.8;margin-top:4px}
+  .winner-banner{background:var(--red-dark);padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .winner-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--red-mid);font-weight:600}
+  .winner-name{font-size:17px;font-weight:600;color:#fff;font-family:var(--font-serif)}
+
+  /* LAYOUT */
+  .container{max-width:860px;margin:0 auto;padding:0 16px}
+  .section{padding:22px 0 10px}
+  .section-title{font-family:var(--font-serif);font-size:18px;font-weight:400;color:var(--gray-800);margin-bottom:14px;padding-bottom:8px;border-bottom:1.5px solid var(--gray-200)}
+
+  /* ROUND SUMMARY CARDS */
+  .rounds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:600px){.rounds-grid{grid-template-columns:1fr}}
+  .round-card{background:#fff;border:0.5px solid var(--gray-200);border-radius:var(--radius);overflow:hidden}
+  .round-card-head{background:var(--red);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:baseline}
+  .round-card-head h3{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+  .round-card-head span{font-size:11px;opacity:.75}
+  .round-card-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+  .candidate-row{display:flex;flex-direction:column;gap:3px}
+  .candidate-row.eliminated{opacity:.45}
+  .cand-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .cand-name{font-size:13px;font-weight:500}
+  .cand-metrics{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+  .cand-votes{font-size:18px;font-weight:700;color:var(--gray-800)}
+  .cand-pts{font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.3px}
+  .bar-track{height:5px;background:var(--gray-100);border-radius:99px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:99px;transition:width .4s}
+  .bar-crombie{background:var(--red)}
+  .bar-es{background:var(--blue)}
+  .bar-naqvi{background:#6B3FA0}
+  .bar-hsu{background:var(--amber)}
+  .elim-badge{font-size:10px;background:var(--gray-100);color:var(--gray-600);padding:1px 6px;border-radius:99px;font-weight:500;margin-left:6px}
+  .winner-badge{font-size:10px;background:#FFF3CD;color:#7C5900;padding:1px 6px;border-radius:99px;font-weight:600;margin-left:6px}
+  .vote-sub{font-size:11px;color:var(--gray-400);}
+  .assoc-meta-chip{font-size:11px;color:var(--gray-600);background:var(--gray-50);border:0.5px solid var(--gray-200);padding:3px 7px;border-radius:999px;white-space:nowrap;justify-self:start}
+  .detail-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}
+  @media(max-width:560px){.detail-overview{grid-template-columns:1fr}}
+  .detail-stat{background:#fff;border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:10px 12px}
+  .detail-stat-label{font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  .detail-stat-value{font-size:20px;font-weight:700;line-height:1.1;color:var(--gray-800);margin-top:3px}
+  .detail-stat-sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+  .benchmark-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  @media(max-width:720px){.benchmark-grid{grid-template-columns:1fr}}
+  .benchmark-card{background:#fff;border:0.5px solid var(--gray-200);border-radius:var(--radius);padding:12px 14px}
+  .benchmark-title{font-size:13px;font-weight:600;color:var(--gray-800);margin-bottom:8px}
+  .benchmark-list{display:flex;flex-direction:column;gap:4px}
+  .benchmark-item{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--gray-600)}
+  .benchmark-item strong{font-weight:600;color:var(--gray-800)}
+
+  /* SEARCH */
+  .search-wrap{position:relative;margin-bottom:14px}
+  .search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none}
+  #search-input{width:100%;padding:10px 14px 10px 36px;border:1px solid var(--gray-200);border-radius:var(--radius);font-family:var(--font-sans);font-size:16px;background:#fff;outline:none;color:var(--gray-800);-webkit-appearance:none;appearance:none}
+  #search-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.12)}
+  .result-count{font-size:12px;color:var(--gray-400);margin-bottom:10px}
+
+  /* ASSOCIATION LIST */
+  .assoc-list{display:flex;flex-direction:column;gap:0}
+  .assoc-item{background:#fff;border:0.5px solid var(--gray-200);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+  .assoc-item:hover,.assoc-item:focus{border-color:var(--gray-400);box-shadow:0 2px 8px rgba(0,0,0,.06);outline:none}
+  .assoc-item.open{border-color:var(--red)}
+  .assoc-header{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .assoc-left{display:flex;align-items:center;gap:8px;min-width:0}
+  .assoc-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .assoc-badge{flex-shrink:0;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:600;white-space:nowrap}
+  .badge-riding{background:var(--red-light);color:var(--red-dark)}
+  .badge-student{background:var(--blue-light);color:var(--blue)}
+  .badge-women{background:var(--green-light);color:var(--green)}
+  .assoc-summary{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .mini-bar{display:flex;height:8px;width:80px;border-radius:99px;overflow:hidden;gap:1px}
+  .mini-seg{height:100%}
+  .chevron{color:var(--gray-400);transition:transform .2s;flex-shrink:0}
+  .assoc-item.open .chevron{transform:rotate(180deg)}
+
+  @media(max-width:640px){
+    .assoc-header{align-items:flex-start}
+    .assoc-summary{display:grid;grid-template-columns:repeat(2,max-content);align-items:center;justify-content:end;gap:6px;row-gap:4px;flex-shrink:0}
+    .assoc-meta-chip{font-size:10px;padding:2px 6px}
+    .mini-bar{display:none}
+    .assoc-name{white-space:normal;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  }
+  @media(max-width:420px){
+    .assoc-header{gap:8px}
+    .assoc-left{flex:1 1 auto;min-width:0}
+    .assoc-summary{grid-template-columns:repeat(2,max-content);justify-content:end}
+    .chevron{align-self:flex-start;margin-top:2px}
+  }
+
+  /* DETAIL PANEL */
+  .assoc-detail{display:none;border-top:0.5px solid var(--gray-100);padding:14px 14px 16px;background:var(--gray-50)}
+  .assoc-item.open .assoc-detail{display:block}
+  .rounds-detail{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(max-width:500px){.rounds-detail{grid-template-columns:1fr}}
+  .rd-block{background:#fff;border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:10px 12px}
+  .rd-title{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--gray-400);font-weight:600;margin-bottom:8px}
+  .rd-row{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+  .rd-row:last-child{margin-bottom:0}
+  .rd-cand{font-size:12px;font-weight:500;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+  .rd-votes{font-size:18px;font-weight:700;color:var(--gray-800);line-height:1}
+  .rd-points-line{font-size:11px;color:var(--gray-400);display:flex;justify-content:space-between;gap:8px}
+  .rd-pts{font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.3px}
+  .rd-bar-track{height:4px;background:var(--gray-100);border-radius:99px;overflow:hidden;margin-top:2px}
+  .rd-bar-fill{height:100%;border-radius:99px}
+  .rd-meta{margin-top:8px;padding-top:8px;border-top:0.5px solid var(--gray-100);font-size:11px;color:var(--gray-400);display:flex;flex-wrap:wrap;gap:6px}
+  .rd-elim{opacity:.4;font-style:italic}
+
+  /* TOTALS ROW */
+  .totals-card{background:#fff;border:0.5px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px}
+  .totals-inner{display:flex;flex-wrap:wrap;gap:20px}
+  .total-item{display:flex;flex-direction:column;gap:2px}
+  .total-item .label{font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  .total-item .val{font-size:18px;font-weight:600;color:var(--gray-800)}
+  .total-item .sub{font-size:11px;color:var(--gray-400)}
+
+  /* TABS */
+  .tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1.5px solid var(--gray-200)}
+  .tab-btn{padding:8px 16px;font-family:var(--font-sans);font-size:13px;font-weight:500;border:none;background:none;cursor:pointer;color:var(--gray-400);border-bottom:2px solid transparent;margin-bottom:-1.5px;transition:color .15s,border-color .15s}
+  .tab-btn.active{color:var(--red);border-bottom-color:var(--red)}
+  .tab-btn:hover:not(.active){color:var(--gray-600)}
+
+  /* SORT ROW */
+  .sort-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .sort-row label{font-size:12px;color:var(--gray-400)}
+  .sort-select{font-family:var(--font-sans);font-size:12px;padding:4px 8px;border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);background:#fff;color:var(--gray-800);cursor:pointer}
+  .sort-select:focus{outline:none;border-color:var(--red)}
+
+  /* HIGHLIGHT */
+  mark{background:rgba(200,16,46,.13);color:inherit;border-radius:2px;padding:0 1px}
+
+  /* FOOTER */
+  .site-footer{text-align:center;padding:28px 16px;font-size:11px;color:var(--gray-400);border-top:0.5px solid var(--gray-200);margin-top:20px}
+
+  /* NO RESULTS */
+  .empty-state{text-align:center;padding:40px 20px;color:var(--gray-400);font-size:14px}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <h1>Ontario Liberal Leadership<br>Nomination Results</h1>
+    <p>2023 race · Three rounds of voting · 143 riding associations + clubs</p>
+  </div>
+</header>
+<div class="winner-banner">
+  <div class="container" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span class="winner-label">Winner</span>
+    <span class="winner-name">Bonnie Crombie</span>
+    <span style="font-size:12px;color:var(--red-mid);">6,911 pts after Round 3 · 53.5% of valid points</span>
+  </div>
+</div>
+
+<div class="container">
+  <!-- ROUND SUMMARIES -->
+  <div class="section">
+    <h2 class="section-title">Round-by-round totals</h2>
+    <div class="rounds-grid" id="rounds-grid"></div>
+  </div>
+
+  <!-- BENCHMARKS -->
+  <div class="section">
+    <h2 class="section-title">Key benchmarks</h2>
+    <div class="benchmark-grid" id="benchmark-grid"></div>
+  </div>
+
+  <!-- ASSOCIATIONS -->
+  <div class="section">
+    <h2 class="section-title">Search riding &amp; club results</h2>
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" id="search-input" placeholder="Search riding or club name…" autocomplete="off" aria-label="Search associations">
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-filter="all">All</button>
+      <button class="tab-btn" data-filter="riding">Ridings (100 pts)</button>
+      <button class="tab-btn" data-filter="student">Student clubs (50 pts)</button>
+      <button class="tab-btn" data-filter="women">Women's clubs (5 pts)</button>
+    </div>
+    <div class="sort-row">
+      <label for="sort-select">Sort by</label>
+      <select id="sort-select" class="sort-select">
+        <option value="name">Name A–Z</option>
+        <option value="crombie_r3_desc">Round 3: Crombie % ↓</option>
+        <option value="es_r3_desc">Round 3: Erskine-Smith % ↓</option>
+        <option value="crombie_r1_desc">Round 1: Crombie % ↓</option>
+        <option value="pts_per_vote_desc">Pts per vote ↓</option>
+        <option value="eligible_desc">Eligible members ↓</option>
+        <option value="votes_cast_desc">Votes cast ↓</option>
+      </select>
+    </div>
+    <p class="result-count" id="result-count"></p>
+    <div class="assoc-list" id="assoc-list" role="list"></div>
+    <div class="empty-state" id="empty-state" style="display:none">No results found — try a different search.</div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">Data: Ontario Liberal Party · 2023 leadership nomination · Points are proportional share of each association's total (100 for ridings, 50 for student clubs, 5 for women's clubs).</div>
+</footer>
+
+<script>
+// ── DATA ───────────────────────────────────────────────────────────────────────
+const R1 = [
+["Ajax",1117,77,26,13,147,263,4,0,267,100,29.3,9.9,4.9,55.9],
+["Algoma—Manitoulin",149,17,34,7,11,69,0,0,69,100,24.6,49.3,10.1,15.9],
+["Aurora—Oak Ridges—Richmond Hill",455,54,34,9,41,138,1,0,139,100,39.1,24.6,6.5,29.7],
+["Barrie—Innisfil",274,60,29,7,18,114,3,0,117,100,52.6,25.4,6.1,15.8],
+["Barrie—Springwater—Oro-Medonte",320,97,30,12,6,145,1,0,146,100,66.9,20.7,8.3,4.1],
+["Bay of Quinte",353,62,36,37,24,159,0,0,159,100,39.0,22.6,23.3,15.1],
+["Beaches—East York",2056,123,751,28,24,926,3,0,929,100,13.3,81.1,3.0,2.6],
+["Brampton Centre",1237,32,27,0,167,226,3,0,229,100,14.2,11.9,0.0,73.9],
+["Brampton East",1722,59,25,3,15,102,2,0,104,100,57.8,24.5,2.9,14.7],
+["Brampton North",1432,90,24,1,83,198,0,0,198,100,45.5,12.1,0.5,41.9],
+["Brampton South",1778,92,103,5,45,245,2,0,247,100,37.6,42.0,2.0,18.4],
+["Brampton West",4359,54,58,4,84,200,2,0,202,100,27.0,29.0,2.0,42.0],
+["Brantford—Brant",437,41,29,11,15,96,0,0,96,100,42.7,30.2,11.5,15.6],
+["Bruce—Grey—Owen Sound",317,47,51,20,9,127,0,0,127,100,37.0,40.2,15.7,7.1],
+["Burlington",439,89,65,23,26,203,0,0,203,100,43.8,32.0,11.3,12.8],
+["Cambridge",730,40,20,7,30,97,4,0,101,100,41.2,20.6,7.2,30.9],
+["Carleton",663,52,53,12,89,206,0,0,206,100,25.2,25.7,5.8,43.2],
+["Chatham-Kent—Leamington",141,22,10,3,22,57,1,0,58,100,38.6,17.5,5.3,38.6],
+["Davenport",438,51,67,10,16,144,0,0,144,100,35.4,46.5,6.9,11.1],
+["Don Valley East",1574,155,34,9,60,258,1,0,259,100,60.1,13.2,3.5,23.3],
+["Don Valley North",493,44,17,6,14,81,1,0,82,100,54.3,21.0,7.4,17.3],
+["Don Valley West",1060,220,71,40,58,389,4,0,393,100,56.6,18.3,10.3,14.9],
+["Dufferin—Caledon",742,71,61,11,7,150,0,0,150,100,47.3,40.7,7.3,4.7],
+["Durham",527,60,20,7,46,133,0,0,133,100,45.1,15.0,5.3,34.6],
+["Eglinton—Lawrence",2726,233,80,59,8,380,1,0,381,100,61.3,21.1,15.5,2.1],
+["Elgin—Middlesex—London",410,35,38,10,22,105,0,0,105,100,33.3,36.2,9.5,21.0],
+["Essex",227,29,10,7,10,56,0,0,56,100,51.8,17.9,12.5,17.9],
+["Etobicoke Centre",633,194,40,15,19,268,2,0,270,100,72.4,14.9,5.6,7.1],
+["Etobicoke—Lakeshore",607,210,61,16,20,307,0,0,307,100,68.4,19.9,5.2,6.5],
+["Etobicoke North",772,72,9,2,21,104,3,0,107,100,69.2,8.7,1.9,20.2],
+["Flamborough—Glanbrook",774,73,26,9,50,158,0,0,158,100,46.2,16.5,5.7,31.6],
+["Glengarry—Prescott—Russell",159,41,6,9,15,71,0,0,71,100,57.7,8.5,12.7,21.1],
+["Guelph",561,87,54,24,25,190,0,0,190,100,45.8,28.4,12.6,13.2],
+["Haldimand—Norfolk",242,40,21,8,4,73,1,0,74,100,54.8,28.8,11.0,5.5],
+["Haliburton—Kawartha Lakes—Brock",252,47,37,21,7,112,2,0,114,100,42.0,33.0,18.8,6.3],
+["Hamilton Centre",468,47,51,26,4,128,1,0,129,100,36.7,39.8,20.3,3.1],
+["Hamilton East—Stoney Creek",383,51,30,7,10,98,4,0,102,100,52.0,30.6,7.1,10.2],
+["Hamilton Mountain",290,44,18,7,11,80,1,0,81,100,55.0,22.5,8.8,13.8],
+["Hamilton West—Ancaster—Dundas",780,87,52,21,31,191,1,0,192,100,45.5,27.2,11.0,16.2],
+["Hastings—Lennox and Addington",275,28,30,60,1,119,0,0,119,100,23.5,25.2,50.4,0.8],
+["Humber River—Black Creek",535,80,11,1,3,95,0,0,95,100,84.2,11.6,1.1,3.2],
+["Huron—Bruce",343,98,31,19,11,159,1,0,160,100,61.6,19.5,11.9,6.9],
+["Kanata—Carleton",1685,62,141,23,109,335,4,0,339,100,18.5,42.1,6.9,32.5],
+["Kenora—Rainy River",86,9,18,5,2,34,0,0,34,100,26.5,52.9,14.7,5.9],
+["King—Vaughan",1013,64,28,4,26,122,0,0,122,100,52.5,23.0,3.3,21.3],
+["Kingston and the Islands",1374,46,36,746,15,843,3,0,846,100,5.5,4.3,88.5,1.8],
+["Kitchener Centre",412,50,33,11,10,104,0,0,104,100,48.1,31.7,10.6,9.6],
+["Kitchener—Conestoga",339,41,22,12,13,88,5,0,93,100,46.6,25.0,13.6,14.8],
+["Kitchener South—Hespeler",553,47,15,4,33,99,3,0,102,100,47.5,15.2,4.0,33.3],
+["Lambton—Kent—Middlesex",135,15,25,2,16,58,0,0,58,100,25.9,43.1,3.4,27.6],
+["Lanark—Frontenac—Kingston",352,39,34,89,25,187,0,0,187,100,20.9,18.2,47.6,13.4],
+["Leeds—Grenville—Thousand Islands and Rideau Lakes",261,30,21,34,21,106,0,0,106,100,28.3,19.8,32.1,19.8],
+["London—Fanshawe",384,21,12,8,38,79,0,0,79,100,26.6,15.2,10.1,48.1],
+["London North Centre",512,57,28,11,34,130,0,0,130,100,43.8,21.5,8.5,26.2],
+["London West",527,37,53,8,62,160,1,0,161,100,23.1,33.1,5.0,38.8],
+["Markham—Stouffville",868,94,56,24,36,210,0,0,210,100,44.8,26.7,11.4,17.1],
+["Markham—Thornhill",1209,69,47,7,68,191,1,0,192,100,36.1,24.6,3.7,35.6],
+["Markham—Unionville",431,50,16,7,19,92,2,0,94,100,54.3,17.4,7.6,20.7],
+["Milton",3677,195,76,11,146,428,2,0,430,100,45.6,17.8,2.6,34.1],
+["Mississauga Centre",1409,102,38,6,60,206,4,0,210,100,49.5,18.4,2.9,29.1],
+["Mississauga East—Cooksville",754,115,19,2,17,153,0,0,153,100,75.2,12.4,1.3,11.1],
+["Mississauga—Erin Mills",2100,225,89,6,96,416,2,0,418,100,54.1,21.4,1.4,23.1],
+["Mississauga—Lakeshore",987,274,44,24,23,365,2,0,367,100,75.1,12.1,6.6,6.3],
+["Mississauga—Malton",1988,88,45,0,38,171,7,0,178,100,51.5,26.3,0.0,22.2],
+["Mississauga—Streetsville",1638,203,62,7,153,425,5,0,430,100,47.8,14.6,1.6,36.0],
+["Nepean",2171,52,44,14,144,254,2,0,256,100,20.5,17.3,5.5,56.7],
+["Newmarket—Aurora",663,113,36,25,12,186,1,0,187,100,60.8,19.4,13.4,6.5],
+["Niagara Centre",298,41,19,7,11,78,1,0,79,100,52.6,24.4,9.0,14.1],
+["Niagara Falls",452,35,22,5,30,92,3,0,95,100,38.0,23.9,5.4,32.6],
+["Niagara West",200,45,24,20,22,111,0,0,111,100,40.5,21.6,18.0,19.8],
+["Nickel Belt",141,21,20,6,12,59,0,0,59,100,35.6,33.9,10.2,20.3],
+["Nipissing",165,19,33,10,8,70,1,0,71,100,27.1,47.1,14.3,11.4],
+["Northumberland—Peterborough South",415,107,59,48,12,226,1,0,227,100,47.3,26.1,21.2,5.3],
+["Oakville",1054,278,83,19,43,423,5,0,428,100,65.7,19.6,4.5,10.2],
+["Oakville North—Burlington",1208,104,79,13,120,316,1,0,317,100,32.9,25.0,4.1,38.0],
+["Orléans",1295,63,51,11,90,215,1,0,216,100,29.3,23.7,5.1,41.9],
+["Oshawa",320,44,17,7,17,85,1,0,86,100,51.8,20.0,8.2,20.0],
+["Ottawa Centre",1228,99,181,36,225,541,0,0,541,100,18.3,33.5,6.7,41.6],
+["Ottawa South",587,61,43,13,89,206,2,0,208,100,29.6,20.9,6.3,43.2],
+["Ottawa—Vanier",811,50,70,29,112,261,1,0,262,100,19.2,26.8,11.1,42.9],
+["Ottawa West—Nepean",1954,52,31,15,84,182,0,0,182,100,28.6,17.0,8.2,46.2],
+["Oxford",271,32,41,13,3,89,0,0,89,100,36.0,46.1,14.6,3.4],
+["Parkdale—High Park",1378,156,92,34,26,308,0,0,308,100,50.6,29.9,11.0,8.4],
+["Parry Sound—Muskoka",229,37,26,29,5,97,0,0,97,100,38.1,26.8,29.9,5.2],
+["Perth—Wellington",269,45,25,8,39,117,0,0,117,100,38.5,21.4,6.8,33.3],
+["Peterborough—Kawartha",728,187,67,58,33,345,0,0,345,100,54.2,19.4,16.8,9.6],
+["Pickering—Uxbridge",2257,68,33,9,145,255,0,0,255,100,26.7,12.9,3.5,56.9],
+["Renfrew—Nipissing—Pembroke",218,23,25,44,28,120,0,0,120,100,19.2,20.8,36.7,23.3],
+["Richmond Hill",436,53,20,8,20,101,0,0,101,100,52.5,19.8,7.9,19.8],
+["St. Catharines",508,96,42,21,13,172,1,0,173,100,55.8,24.4,12.2,7.6],
+["Sarnia—Lambton",296,40,33,17,4,94,1,0,95,100,42.6,35.1,18.1,4.3],
+["Sault Ste. Marie",303,16,20,1,43,80,0,0,80,100,20.0,25.0,1.3,53.8],
+["Scarborough—Agincourt",467,45,34,11,6,96,1,0,97,100,46.9,35.4,11.5,6.3],
+["Scarborough Centre",3328,56,43,7,144,250,3,0,253,100,22.4,17.2,2.8,57.6],
+["Scarborough—Guildwood",1551,64,58,4,51,177,2,0,179,100,36.2,32.8,2.3,28.8],
+["Scarborough North",2198,49,16,6,20,91,2,0,93,100,53.8,17.6,6.6,22.0],
+["Scarborough—Rouge Park",1264,63,29,4,21,117,1,0,118,100,53.8,24.8,3.4,17.9],
+["Scarborough Southwest",3819,92,203,14,87,396,9,0,405,100,23.2,51.3,3.5,22.0],
+["Simcoe—Grey",412,87,49,9,10,155,1,0,156,100,56.1,31.6,5.8,6.5],
+["Simcoe North",253,63,26,10,16,115,0,0,115,100,54.8,22.6,8.7,13.9],
+["Spadina—Fort York",683,78,72,19,16,185,0,0,185,100,42.2,38.9,10.3,8.6],
+["Stormont—Dundas—South Glengarry",436,35,22,20,69,146,2,0,148,100,24.0,15.1,13.7,47.3],
+["Sudbury",401,57,94,6,26,183,1,0,184,100,31.1,51.4,3.3,14.2],
+["Thornhill",273,41,19,12,13,85,0,0,85,100,48.2,22.4,14.1,15.3],
+["Thunder Bay—Atikokan",358,41,34,7,7,89,0,0,89,100,46.1,38.2,7.9,7.9],
+["Thunder Bay—Superior North",296,41,44,14,11,110,2,0,112,100,37.3,40.0,12.7,10.0],
+["Timiskaming—Cochrane",134,17,19,3,6,45,0,0,45,100,37.8,42.2,6.7,13.3],
+["Timmins",75,8,5,5,16,34,0,0,34,100,23.5,14.7,14.7,47.1],
+["Toronto Centre",826,142,110,29,32,313,0,0,313,100,45.4,35.1,9.3,10.2],
+["Toronto—Danforth",844,92,193,30,47,362,0,0,362,100,25.4,53.3,8.3,13.0],
+["Toronto—St. Paul's",749,208,103,34,15,360,0,0,360,100,57.8,28.6,9.4,4.2],
+["University—Rosedale",929,133,125,34,28,320,2,0,322,100,41.6,39.1,10.6,8.8],
+["Vaughan—Woodbridge",428,83,16,2,14,115,2,0,117,100,72.2,13.9,1.7,12.2],
+["Waterloo",646,59,42,25,37,163,0,0,163,100,36.2,25.8,15.3,22.7],
+["Wellington—Halton Hills",385,99,31,19,18,167,0,0,167,100,59.3,18.6,11.4,10.8],
+["Whitby",653,66,56,15,26,163,1,0,164,100,40.5,34.4,9.2,16.0],
+["Willowdale",394,95,39,11,9,154,1,0,155,100,61.7,25.3,7.1,5.8],
+["Windsor—Tecumseh",356,72,22,6,5,105,1,0,106,100,68.6,21.0,5.7,4.8],
+["Windsor West",622,49,8,6,56,119,0,0,119,100,41.2,6.7,5.0,47.1],
+["York Centre",1276,69,15,7,0,91,0,0,91,100,75.8,16.5,7.7,0.0],
+["York—Simcoe",329,93,16,5,38,152,2,0,154,100,61.2,10.5,3.3,25.0],
+["York South—Weston",505,59,23,1,2,85,2,0,87,100,69.4,27.1,1.2,2.4],
+["Kiiwetinoong",27,4,3,3,1,11,0,0,11,100,36.4,27.3,27.3,9.1],
+["Mushkegowuk—James Bay",67,4,8,3,7,22,0,0,22,100,18.2,36.4,13.6,31.8],
+["Brock University Student Club",25,0,6,0,3,9,0,0,9,50,0.0,33.3,0.0,16.7],
+["Carleton University Student Club",63,2,3,0,13,18,0,0,18,50,5.6,8.3,0.0,36.1],
+["Queen's University Student Club",86,8,4,8,12,32,0,0,32,50,12.5,6.3,12.5,18.8],
+["Toronto Metropolitan University Student Club",60,4,8,0,5,17,0,0,17,50,11.8,23.5,0.0,14.7],
+["University of Guelph Student Club",74,4,2,0,2,8,0,0,8,50,25.0,12.5,0.0,12.5],
+["University of Ottawa Student Club",45,10,2,5,10,27,0,0,27,50,18.5,3.7,9.3,18.5],
+["University of Toronto (Downtown) Student Club",49,12,4,3,8,27,0,0,27,50,22.2,7.4,5.6,14.8],
+["University of Toronto (Mississauga) Student Club",49,13,0,0,2,15,0,0,15,50,43.3,0.0,0.0,6.7],
+["University of Toronto (Scarborough) Student Club",17,2,1,2,5,10,0,0,10,50,10.0,5.0,10.0,25.0],
+["University of Windsor Student Club",11,4,0,0,4,8,0,0,8,50,25.0,0.0,0.0,25.0],
+["Durham Women's Club",6,0,0,0,4,4,0,0,4,5,0.0,0.0,0.0,5.0],
+["Hamilton Region Women's Club",8,2,1,1,0,4,0,0,4,5,2.5,1.3,1.3,0.0],
+["Kanata—Carleton Women's Club",1,0,0,0,1,1,0,0,1,5,0.0,0.0,0.0,5.0],
+["Nepean Women's Club",7,4,1,1,1,7,0,0,7,5,2.9,0.7,0.7,0.7],
+["Orléans Women's Club",3,1,0,0,1,2,0,0,2,5,2.5,0.0,0.0,2.5],
+["Scarborough—Guildwood Women's Club",6,3,0,0,0,3,0,0,3,5,5.0,0.0,0.0,0.0],
+["Scarborough—Rouge Park Women's Club",2,1,0,0,0,1,0,0,1,5,5.0,0.0,0.0,0.0],
+["Waterloo Region Women's Club",7,5,0,0,1,6,0,0,6,5,4.2,0.0,0.0,0.8],
+];
+// R1 cols: name,eligible,crombie_v,es_v,hsu_v,naqvi_v,valid,invalid,exhausted,cast,pts,crombie_p,es_p,hsu_p,naqvi_p
+
+const R2 = [
+["Ajax",84,31,148,263,4,0,267,100,31.9,11.8,56.3],
+["Algoma—Manitoulin",18,36,14,68,0,1,69,100,26.5,52.9,20.6],
+["Aurora—Oak Ridges—Richmond Hill",57,36,45,138,1,0,139,100,41.3,26.1,32.6],
+["Barrie—Innisfil",62,31,20,113,3,1,117,100,54.9,27.4,17.7],
+["Barrie—Springwater—Oro-Medonte",101,34,7,142,1,3,146,100,71.1,23.9,4.9],
+["Bay of Quinte",76,50,30,156,0,3,159,100,48.7,32.1,19.2],
+["Beaches—East York",131,769,26,926,3,0,929,100,14.1,83.0,2.8],
+["Brampton Centre",32,27,167,226,3,0,229,100,14.2,11.9,73.9],
+["Brampton East",61,26,15,102,2,0,104,100,59.8,25.5,14.7],
+["Brampton North",91,24,83,198,0,0,198,100,46.0,12.1,41.9],
+["Brampton South",93,105,47,245,2,0,247,100,38.0,42.9,19.2],
+["Brampton West",56,59,85,200,2,0,202,100,28.0,29.5,42.5],
+["Brantford—Brant",47,31,18,96,0,0,96,100,49.0,32.3,18.8],
+["Bruce—Grey—Owen Sound",48,64,10,122,0,5,127,100,39.3,52.5,8.2],
+["Burlington",92,76,35,203,0,0,203,100,45.3,37.4,17.2],
+["Cambridge",44,23,30,97,4,0,101,100,45.4,23.7,30.9],
+["Carleton",57,54,93,204,0,2,206,100,27.9,26.5,45.6],
+["Chatham-Kent—Leamington",24,11,22,57,1,0,58,100,42.1,19.3,38.6],
+["Davenport",52,73,19,144,0,0,144,100,36.1,50.7,13.2],
+["Don Valley East",161,35,62,258,1,0,259,100,62.4,13.6,24.0],
+["Don Valley North",47,20,14,81,1,0,82,100,58.0,24.7,17.3],
+["Don Valley West",238,87,62,387,4,2,393,100,61.5,22.5,16.0],
+["Dufferin—Caledon",75,65,10,150,0,0,150,100,50.0,43.3,6.7],
+["Durham",62,21,50,133,0,0,133,100,46.6,15.8,37.6],
+["Eglinton—Lawrence",257,103,18,378,1,2,381,100,68.0,27.2,4.8],
+["Elgin—Middlesex—London",35,39,24,98,0,7,105,100,35.7,39.8,24.5],
+["Essex",34,12,10,56,0,0,56,100,60.7,21.4,17.9],
+["Etobicoke Centre",201,46,21,268,2,0,270,100,75.0,17.2,7.8],
+["Etobicoke—Lakeshore",218,67,21,306,0,1,307,100,71.2,21.9,6.9],
+["Etobicoke North",72,10,22,104,3,0,107,100,69.2,9.6,21.2],
+["Flamborough—Glanbrook",75,32,51,158,0,0,158,100,47.5,20.3,32.3],
+["Glengarry—Prescott—Russell",43,7,20,70,0,1,71,100,61.4,10.0,28.6],
+["Guelph",99,59,30,188,0,2,190,100,52.7,31.4,16.0],
+["Haldimand—Norfolk",40,23,10,73,1,0,74,100,54.8,31.5,13.7],
+["Haliburton—Kawartha Lakes—Brock",56,43,12,111,2,1,114,100,50.5,38.7,10.8],
+["Hamilton Centre",58,57,9,124,1,4,129,100,46.8,46.0,7.3],
+["Hamilton East—Stoney Creek",52,30,15,97,4,1,102,100,53.6,30.9,15.5],
+["Hamilton Mountain",45,20,14,79,1,1,81,100,57.0,25.3,17.7],
+["Hamilton West—Ancaster—Dundas",98,57,33,188,1,3,192,100,52.1,30.3,17.6],
+["Hastings—Lennox and Addington",48,48,19,115,0,4,119,100,41.7,41.7,16.5],
+["Humber River—Black Creek",81,11,3,95,0,0,95,100,85.3,11.6,3.2],
+["Huron—Bruce",105,35,13,153,1,6,160,100,68.6,22.9,8.5],
+["Kanata—Carleton",69,150,115,334,4,1,339,100,20.7,44.9,34.4],
+["Kenora—Rainy River",10,22,2,34,0,0,34,100,29.4,64.7,5.9],
+["King—Vaughan",64,30,27,121,0,1,122,100,52.9,24.8,22.3],
+["Kingston and the Islands",259,261,189,709,3,135,847,100,36.5,36.8,26.7],
+["Kitchener Centre",54,34,15,103,0,1,104,100,52.4,33.0,14.6],
+["Kitchener—Conestoga",43,27,18,88,5,0,93,100,48.9,30.7,20.5],
+["Kitchener South—Hespeler",51,15,33,99,3,0,102,100,51.5,15.2,33.3],
+["Lambton—Kent—Middlesex",15,26,17,58,0,0,58,100,25.9,44.8,29.3],
+["Lanark—Frontenac—Kingston",69,63,49,181,0,6,187,100,38.1,34.8,27.1],
+["Leeds—Grenville—Thousand Islands and Rideau Lakes",42,28,32,102,0,4,106,100,41.2,27.5,31.4],
+["London—Fanshawe",24,13,42,79,0,0,79,100,30.4,16.5,53.2],
+["London North Centre",60,33,37,130,0,0,130,100,46.2,25.4,28.5],
+["London West",39,55,64,158,1,2,161,100,24.7,34.8,40.5],
+["Markham—Stouffville",101,63,44,208,0,2,210,100,48.6,30.3,21.2],
+["Markham—Thornhill",74,47,69,190,1,1,192,100,38.9,24.7,36.3],
+["Markham—Unionville",52,18,20,90,2,2,94,100,57.8,20.0,22.2],
+["Milton",196,81,151,428,2,0,430,100,45.8,18.9,35.3],
+["Mississauga Centre",105,41,60,206,4,0,210,100,51.0,19.9,29.1],
+["Mississauga East—Cooksville",116,19,18,153,0,0,153,100,75.8,12.4,11.8],
+["Mississauga—Erin Mills",229,90,97,416,2,0,418,100,55.0,21.6,23.3],
+["Mississauga—Lakeshore",279,57,28,364,2,1,367,100,76.6,15.7,7.7],
+["Mississauga—Malton",88,45,38,171,7,0,178,100,51.5,26.3,22.2],
+["Mississauga—Streetsville",207,65,153,425,5,0,430,100,48.7,15.3,36.0],
+["Nepean",58,48,148,254,2,0,256,100,22.8,18.9,58.3],
+["Newmarket—Aurora",120,47,18,185,1,1,187,100,64.9,25.4,9.7],
+["Niagara Centre",45,20,13,78,1,0,79,100,57.7,25.6,16.7],
+["Niagara Falls",37,23,31,91,3,1,95,100,40.7,25.3,34.1],
+["Niagara West",45,32,32,109,0,2,111,100,41.3,29.4,29.4],
+["Nickel Belt",21,24,14,59,0,0,59,100,35.6,40.7,23.7],
+["Nipissing",21,36,10,67,1,3,71,100,31.3,53.7,14.9],
+["Northumberland—Peterborough South",121,83,17,221,1,5,227,100,54.8,37.6,7.7],
+["Oakville",286,92,45,423,5,0,428,100,67.6,21.7,10.6],
+["Oakville North—Burlington",108,83,123,314,1,2,317,100,34.4,26.4,39.2],
+["Orléans",64,52,92,208,1,7,216,100,30.8,25.0,44.2],
+["Oshawa",48,18,19,85,1,0,86,100,56.5,21.2,22.4],
+["Ottawa Centre",113,193,234,540,0,1,541,100,20.9,35.7,43.3],
+["Ottawa South",66,47,93,206,2,0,208,100,32.0,22.8,45.1],
+["Ottawa—Vanier",61,76,121,258,1,3,262,100,23.6,29.5,46.9],
+["Ottawa West—Nepean",56,36,89,181,0,1,182,100,30.9,19.9,49.2],
+["Oxford",38,47,4,89,0,0,89,100,42.7,52.8,4.5],
+["Parkdale—High Park",166,106,34,306,0,2,308,100,54.2,34.6,11.1],
+["Parry Sound—Muskoka",49,38,10,97,0,0,97,100,50.5,39.2,10.3],
+["Perth—Wellington",47,29,41,117,0,0,117,100,40.2,24.8,35.0],
+["Peterborough—Kawartha",214,89,38,341,0,4,345,100,62.8,26.1,11.1],
+["Pickering—Uxbridge",74,35,146,255,0,0,255,100,29.0,13.7,57.3],
+["Renfrew—Nipissing—Pembroke",35,38,46,119,0,1,120,100,29.4,31.9,38.7],
+["Richmond Hill",56,22,21,99,0,2,101,100,56.6,22.2,21.2],
+["St. Catharines",102,49,20,171,1,1,173,100,59.6,28.7,11.7],
+["Sarnia—Lambton",42,43,9,94,1,0,95,100,44.7,45.7,9.6],
+["Sault Ste. Marie",17,20,43,80,0,0,80,100,21.3,25.0,53.8],
+["Scarborough—Agincourt",49,38,8,95,1,1,97,100,51.6,40.0,8.4],
+["Scarborough Centre",59,46,144,249,3,1,253,100,23.7,18.5,57.8],
+["Scarborough—Guildwood",66,60,51,177,2,0,179,100,37.3,33.9,28.8],
+["Scarborough North",53,17,20,90,2,1,93,100,58.9,18.9,22.2],
+["Scarborough—Rouge Park",66,30,21,117,1,0,118,100,56.4,25.6,17.9],
+["Scarborough Southwest",95,212,89,396,9,0,405,100,24.0,53.5,22.5],
+["Simcoe—Grey",89,54,12,155,1,0,156,100,57.4,34.8,7.7],
+["Simcoe North",70,27,18,115,0,0,115,100,60.9,23.5,15.7],
+["Spadina—Fort York",85,80,20,185,0,0,185,100,45.9,43.2,10.8],
+["Stormont—Dundas—South Glengarry",38,26,78,142,2,4,148,100,26.8,18.3,54.9],
+["Sudbury",59,95,28,182,1,1,184,100,32.4,52.2,15.4],
+["Thornhill",47,22,15,84,0,1,85,100,56.0,26.2,17.9],
+["Thunder Bay—Atikokan",45,36,8,89,0,0,89,100,50.6,40.4,9.0],
+["Thunder Bay—Superior North",44,51,14,109,2,1,112,100,40.4,46.8,12.8],
+["Timiskaming—Cochrane",18,19,8,45,0,0,45,100,40.0,42.2,17.8],
+["Timmins",8,6,18,32,0,2,34,100,25.0,18.8,56.3],
+["Toronto Centre",153,118,41,312,0,1,313,100,49.0,37.8,13.1],
+["Toronto—Danforth",100,206,54,360,0,2,362,100,27.8,57.2,15.0],
+["Toronto—St. Paul's",227,109,24,360,0,0,360,100,63.1,30.3,6.7],
+["University—Rosedale",148,135,35,318,2,2,322,100,46.5,42.5,11.0],
+["Vaughan—Woodbridge",83,18,14,115,2,0,117,100,72.2,15.7,12.2],
+["Waterloo",69,54,40,163,0,0,163,100,42.3,33.1,24.5],
+["Wellington—Halton Hills",107,36,22,165,0,2,167,100,64.8,21.8,13.3],
+["Whitby",68,66,27,161,1,2,164,100,42.2,41.0,16.8],
+["Willowdale",101,43,10,154,1,0,155,100,65.6,27.9,6.5],
+["Windsor—Tecumseh",74,25,6,105,1,0,106,100,70.5,23.8,5.7],
+["Windsor West",51,9,58,118,0,1,119,100,43.2,7.6,49.2],
+["York Centre",73,16,1,90,0,1,91,100,81.1,17.8,1.1],
+["York—Simcoe",95,19,38,152,2,0,154,100,62.5,12.5,25.0],
+["York South—Weston",59,24,2,85,2,0,87,100,69.4,28.2,2.4],
+["Kiiwetinoong",4,5,2,11,0,0,11,100,36.4,45.5,18.2],
+["Mushkegowuk—James Bay",6,8,7,21,0,1,22,100,28.6,38.1,33.3],
+["Brock University Student Club",0,6,3,9,0,0,9,50,0.0,33.3,16.7],
+["Carleton University Student Club",2,3,13,18,0,0,18,50,5.6,8.3,36.1],
+["Queen's University Student Club",11,8,13,32,0,0,32,50,17.2,12.5,20.3],
+["Toronto Metropolitan University Student Club",4,8,5,17,0,0,17,50,11.8,23.5,14.7],
+["University of Guelph Student Club",4,2,2,8,0,0,8,50,25.0,12.5,12.5],
+["University of Ottawa Student Club",13,2,12,27,0,0,27,50,24.1,3.7,22.2],
+["University of Toronto (Downtown) Student Club",13,6,8,27,0,0,27,50,24.1,11.1,14.8],
+["University of Toronto (Mississauga) Student Club",13,0,2,15,0,0,15,50,43.3,0.0,6.7],
+["University of Toronto (Scarborough) Student Club",4,1,5,10,0,0,10,50,20.0,5.0,25.0],
+["University of Windsor Student Club",4,0,4,8,0,0,8,50,25.0,0.0,25.0],
+["Durham Women's Club",0,0,4,4,0,0,4,5,0.0,0.0,5.0],
+["Hamilton Region Women's Club",2,1,0,3,0,1,4,5,3.3,1.7,0.0],
+["Kanata—Carleton Women's Club",0,0,1,1,0,0,1,5,0.0,0.0,5.0],
+["Nepean Women's Club",5,1,1,7,0,0,7,5,3.6,0.7,0.7],
+["Orléans Women's Club",1,0,1,2,0,0,2,5,2.5,0.0,2.5],
+["Scarborough—Guildwood Women's Club",3,0,0,3,0,0,3,5,5.0,0.0,0.0],
+["Scarborough—Rouge Park Women's Club",1,0,0,1,0,0,1,5,5.0,0.0,0.0],
+["Waterloo Region Women's Club",5,0,1,6,0,0,6,5,4.2,0.0,0.8],
+];
+// R2 cols: name,crombie_v,es_v,naqvi_v,valid,invalid,exhausted,cast,pts,crombie_p,es_p,naqvi_p
+
+const R3 = [
+["Ajax",110,104,214,4,49,267,100,51.4,48.6],
+["Algoma—Manitoulin",19,49,68,0,1,69,100,27.9,72.1],
+["Aurora—Oak Ridges—Richmond Hill",64,73,137,1,1,139,100,46.7,53.3],
+["Barrie—Innisfil",68,44,112,3,2,117,100,60.7,39.3],
+["Barrie—Springwater—Oro-Medonte",102,38,140,1,5,146,100,72.9,27.1],
+["Bay of Quinte",82,72,154,0,5,159,100,53.2,46.8],
+["Beaches—East York",135,786,921,3,5,929,100,14.7,85.3],
+["Brampton Centre",39,107,146,3,80,229,100,26.7,73.3],
+["Brampton East",64,35,99,2,3,104,100,64.6,35.4],
+["Brampton North",103,88,191,0,7,198,100,53.9,46.1],
+["Brampton South",99,144,243,2,2,247,100,40.7,59.3],
+["Brampton West",70,120,190,2,10,202,100,36.8,63.2],
+["Brantford—Brant",50,46,96,0,0,96,100,52.1,47.9],
+["Bruce—Grey—Owen Sound",53,67,120,0,7,127,100,44.2,55.8],
+["Burlington",96,106,202,0,1,203,100,47.5,52.5],
+["Cambridge",52,43,95,4,2,101,100,54.7,45.3],
+["Carleton",73,120,193,0,13,206,100,37.8,62.2],
+["Chatham-Kent—Leamington",27,28,55,1,2,58,100,49.1,50.9],
+["Davenport",60,83,143,0,1,144,100,42.0,58.0],
+["Don Valley East",169,72,241,1,17,259,100,70.1,29.9],
+["Don Valley North",49,29,78,1,3,82,100,62.8,37.2],
+["Don Valley West",260,117,377,4,12,393,100,69.0,31.0],
+["Dufferin—Caledon",77,72,149,0,1,150,100,51.7,48.3],
+["Durham",74,54,128,0,5,133,100,57.8,42.2],
+["Eglinton—Lawrence",261,117,378,1,2,381,100,69.0,31.0],
+["Elgin—Middlesex—London",38,60,98,0,7,105,100,38.8,61.2],
+["Essex",36,19,55,0,1,56,100,65.5,34.5],
+["Etobicoke Centre",203,65,268,2,0,270,100,75.7,24.3],
+["Etobicoke—Lakeshore",224,81,305,0,2,307,100,73.4,26.6],
+["Etobicoke North",81,20,101,3,3,107,100,80.2,19.8],
+["Flamborough—Glanbrook",93,54,147,0,11,158,100,63.3,36.7],
+["Glengarry—Prescott—Russell",50,18,68,0,3,71,100,73.5,26.5],
+["Guelph",107,78,185,0,5,190,100,57.8,42.2],
+["Haldimand—Norfolk",45,28,73,1,0,74,100,61.6,38.4],
+["Haliburton—Kawartha Lakes—Brock",58,52,110,2,2,114,100,52.7,47.3],
+["Hamilton Centre",58,63,121,1,7,129,100,47.9,52.1],
+["Hamilton East—Stoney Creek",54,41,95,4,3,102,100,56.8,43.2],
+["Hamilton Mountain",48,30,78,1,2,81,100,61.5,38.5],
+["Hamilton West—Ancaster—Dundas",108,76,184,1,7,192,100,58.7,41.3],
+["Hastings—Lennox and Addington",49,65,114,0,5,119,100,43.0,57.0],
+["Humber River—Black Creek",81,12,93,0,2,95,100,87.1,12.9],
+["Huron—Bruce",108,45,153,1,6,160,100,70.6,29.4],
+["Kanata—Carleton",88,239,327,4,8,339,100,26.9,73.1],
+["Kenora—Rainy River",10,24,34,0,0,34,100,29.4,70.6],
+["King—Vaughan",71,47,118,0,4,122,100,60.2,39.8],
+["Kingston and the Islands",315,380,695,3,149,847,100,45.3,54.7],
+["Kitchener Centre",63,39,102,0,2,104,100,61.8,38.2],
+["Kitchener—Conestoga",47,36,83,5,5,93,100,56.6,43.4],
+["Kitchener South—Hespeler",59,35,94,3,5,102,100,62.8,37.2],
+["Lambton—Kent—Middlesex",20,38,58,0,0,58,100,34.5,65.5],
+["Lanark—Frontenac—Kingston",83,95,178,0,9,187,100,46.6,53.4],
+["Leeds—Grenville—Thousand Islands and Rideau Lakes",42,57,99,0,7,106,100,42.4,57.6],
+["London—Fanshawe",36,38,74,0,5,79,100,48.6,51.4],
+["London North Centre",63,64,127,0,3,130,100,49.6,50.4],
+["London West",46,112,158,1,2,161,100,29.1,70.9],
+["Markham—Stouffville",113,88,201,0,9,210,100,56.2,43.8],
+["Markham—Thornhill",93,87,180,1,11,192,100,51.7,48.3],
+["Markham—Unionville",59,29,88,2,4,94,100,67.0,33.0],
+["Milton",246,158,404,2,24,430,100,60.9,39.1],
+["Mississauga Centre",133,66,199,4,7,210,100,66.8,33.2],
+["Mississauga East—Cooksville",117,32,149,0,4,153,100,78.5,21.5],
+["Mississauga—Erin Mills",269,133,402,2,14,418,100,66.9,33.1],
+["Mississauga—Lakeshore",288,74,362,2,3,367,100,79.6,20.4],
+["Mississauga—Malton",96,69,165,7,6,178,100,58.2,41.8],
+["Mississauga—Streetsville",234,158,392,5,33,430,100,59.7,40.3],
+["Nepean",78,155,233,2,21,256,100,33.5,66.5],
+["Newmarket—Aurora",129,56,185,1,1,187,100,69.7,30.3],
+["Niagara Centre",47,25,72,1,6,79,100,65.3,34.7],
+["Niagara Falls",49,36,85,3,7,95,100,57.6,42.4],
+["Niagara West",51,49,100,0,11,111,100,51.0,49.0],
+["Nickel Belt",25,34,59,0,0,59,100,42.4,57.6],
+["Nipissing",26,40,66,1,4,71,100,39.4,60.6],
+["Northumberland—Peterborough South",127,94,221,1,5,227,100,57.5,42.5],
+["Oakville",301,115,416,5,7,428,100,72.4,27.6],
+["Oakville North—Burlington",148,144,292,1,24,317,100,50.7,49.3],
+["Orléans",80,107,187,1,28,216,100,42.8,57.2],
+["Oshawa",50,27,77,1,8,86,100,64.9,35.1],
+["Ottawa Centre",163,359,522,0,19,541,100,31.2,68.8],
+["Ottawa South",90,101,191,2,15,208,100,47.1,52.9],
+["Ottawa—Vanier",94,154,248,1,13,262,100,37.9,62.1],
+["Ottawa West—Nepean",77,89,166,0,16,182,100,46.4,53.6],
+["Oxford",40,49,89,0,0,89,100,44.9,55.1],
+["Parkdale—High Park",178,124,302,0,6,308,100,58.9,41.1],
+["Parry Sound—Muskoka",53,44,97,0,0,97,100,54.6,45.4],
+["Perth—Wellington",51,61,112,0,5,117,100,45.5,54.5],
+["Peterborough—Kawartha",226,113,339,0,6,345,100,66.7,33.3],
+["Pickering—Uxbridge",92,131,223,0,32,255,100,41.3,58.7],
+["Renfrew—Nipissing—Pembroke",49,66,115,0,5,120,100,42.6,57.4],
+["Richmond Hill",61,37,98,0,3,101,100,62.2,37.8],
+["St. Catharines",109,62,171,1,1,173,100,63.7,36.3],
+["Sarnia—Lambton",44,50,94,1,0,95,100,46.8,53.2],
+["Sault Ste. Marie",19,60,79,0,1,80,100,24.1,75.9],
+["Scarborough—Agincourt",49,44,93,1,3,97,100,52.7,47.3],
+["Scarborough Centre",78,134,212,3,38,253,100,36.8,63.2],
+["Scarborough—Guildwood",69,94,163,2,14,179,100,42.3,57.7],
+["Scarborough North",57,32,89,2,2,93,100,64.0,36.0],
+["Scarborough—Rouge Park",70,45,115,1,2,118,100,60.9,39.1],
+["Scarborough Southwest",102,277,379,9,17,405,100,26.9,73.1],
+["Simcoe—Grey",91,61,152,1,3,156,100,59.9,40.1],
+["Simcoe North",73,39,112,0,3,115,100,65.2,34.8],
+["Spadina—Fort York",94,90,184,0,1,185,100,51.1,48.9],
+["Stormont—Dundas—South Glengarry",45,82,127,2,19,148,100,35.4,64.6],
+["Sudbury",60,118,178,1,5,184,100,33.7,66.3],
+["Thornhill",51,32,83,0,2,85,100,61.4,38.6],
+["Thunder Bay—Atikokan",47,42,89,0,0,89,100,52.8,47.2],
+["Thunder Bay—Superior North",45,60,105,2,5,112,100,42.9,57.1],
+["Timiskaming—Cochrane",19,26,45,0,0,45,100,42.2,57.8],
+["Timmins",11,12,23,0,11,34,100,47.8,52.2],
+["Toronto Centre",161,146,307,0,6,313,100,52.4,47.6],
+["Toronto—Danforth",110,244,354,0,8,362,100,31.1,68.9],
+["Toronto—St. Paul's",234,126,360,0,0,360,100,65.0,35.0],
+["University—Rosedale",156,158,314,2,6,322,100,49.7,50.3],
+["Vaughan—Woodbridge",83,23,106,2,9,117,100,78.3,21.7],
+["Waterloo",81,78,159,0,4,163,100,50.9,49.1],
+["Wellington—Halton Hills",114,48,162,0,5,167,100,70.4,29.6],
+["Whitby",76,82,158,1,5,164,100,48.1,51.9],
+["Willowdale",104,50,154,1,0,155,100,67.5,32.5],
+["Windsor—Tecumseh",77,28,105,1,0,106,100,73.3,26.7],
+["Windsor West",68,43,111,0,8,119,100,61.3,38.7],
+["York Centre",74,16,90,0,1,91,100,82.2,17.8],
+["York—Simcoe",107,40,147,2,5,154,100,72.8,27.2],
+["York South—Weston",59,25,84,2,1,87,100,70.2,29.8],
+["Kiiwetinoong",4,7,11,0,0,11,100,36.4,63.6],
+["Mushkegowuk—James Bay",6,13,19,0,3,22,100,31.6,68.4],
+["Brock University Student Club",1,7,8,0,1,9,50,6.3,43.8],
+["Carleton University Student Club",5,13,18,0,0,18,50,13.9,36.1],
+["Queen's University Student Club",17,15,32,0,0,32,50,26.6,23.4],
+["Toronto Metropolitan University Student Club",6,10,16,0,1,17,50,18.8,31.3],
+["University of Guelph Student Club",4,4,8,0,0,8,50,25.0,25.0],
+["University of Ottawa Student Club",17,10,27,0,0,27,50,31.5,18.5],
+["University of Toronto (Downtown) Student Club",15,12,27,0,0,27,50,27.8,22.2],
+["University of Toronto (Mississauga) Student Club",14,1,15,0,0,15,50,46.7,3.3],
+["University of Toronto (Scarborough) Student Club",4,6,10,0,0,10,50,20.0,30.0],
+["University of Windsor Student Club",4,4,8,0,0,8,50,25.0,25.0],
+["Durham Women's Club",1,3,4,0,0,4,5,1.3,3.8],
+["Hamilton Region Women's Club",2,1,3,0,1,4,5,3.3,1.7],
+["Kanata—Carleton Women's Club",0,1,1,0,0,1,5,0.0,5.0],
+["Nepean Women's Club",5,2,7,0,0,7,5,3.6,1.4],
+["Orléans Women's Club",1,1,2,0,0,2,5,2.5,2.5],
+["Scarborough—Guildwood Women's Club",3,0,3,0,0,3,5,5.0,0.0],
+["Scarborough—Rouge Park Women's Club",1,0,1,0,0,1,5,5.0,0.0],
+["Waterloo Region Women's Club",5,1,6,0,0,6,5,4.2,0.8],
+];
+// R3 cols: name,crombie_v,es_v,valid,invalid,exhausted,cast,pts,crombie_p,es_p
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function getType(name){
+  if(name.includes('Student Club')) return 'student';
+  if(name.includes("Women's Club")) return 'women';
+  return 'riding';
+}
+function pct(v){return Math.round(v*10)/10}
+function fmtPts(v){return Math.round(v*10)/10}
+function fmtVotes(v){return v.toLocaleString()}
+function fmtPtsPerVote(v){
+  if(!Number.isFinite(v)) return '0';
+  const rounded = Math.round(v*100)/100;
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2).replace(/\.?0+$/,'');
+}
+function pointsPerVote(points, valid){
+  return valid ? points/valid : 0;
+}
+function median(values){
+  if(!values.length) return 0;
+  const sorted=[...values].sort((a,b)=>a-b);
+  const mid=Math.floor(sorted.length/2);
+  if(sorted.length%2===1) return sorted[mid];
+  return (sorted[mid-1]+sorted[mid])/2;
+}
+
+// Build merged association objects
+const r1Map={}, r2Map={}, r3Map={};
+R1.forEach(r=>{ r1Map[r[0]]={eligible:r[1],cv:r[2],esv:r[3],hsuv:r[4],nv:r[5],valid:r[6],invalid:r[7],exhausted:r[8],cast:r[9],pts:r[10],cp:r[11],esp:r[12],hsup:r[13],np:r[14]}});
+R2.forEach(r=>{ r2Map[r[0]]={cv:r[1],esv:r[2],nv:r[3],valid:r[4],invalid:r[5],exhausted:r[6],cast:r[7],pts:r[8],cp:r[9],esp:r[10],np:r[11]}});
+R3.forEach(r=>{ r3Map[r[0]]={cv:r[1],esv:r[2],valid:r[3],invalid:r[4],exhausted:r[5],cast:r[6],pts:r[7],cp:r[8],esp:r[9]}});
+
+const associations = R1.map(r=>{
+  const name=r[0];
+  return {name, type:getType(name), r1:r1Map[name], r2:r2Map[name], r3:r3Map[name]};
+});
+
+// ── ROUND SUMMARY ─────────────────────────────────────────────────────────────
+const TOTALS = {
+  r1:{crombie_v:9314,es_v:6083,hsu_v:2578,naqvi_v:4705,valid:22680,pts:12940,crombie_p:5559,es_p:3320,hsu_p:1300,naqvi_p:2760},
+  r2:{crombie_v:10176,es_v:6944,naqvi_v:5294,valid:22414,pts:12940,crombie_p:6047,es_p:3792,naqvi_p:3101},
+  r3:{crombie_v:11325,es_v:10307,valid:21632,pts:12940,crombie_p:6911,es_p:6029},
+};
+
+function buildRoundCards(){
+  const grid=document.getElementById('rounds-grid');
+  const rounds=[
+    {label:'Round 1',sub:'Hsu eliminated',candidates:[
+      {name:'Crombie',votes:TOTALS.r1.crombie_v,pts:TOTALS.r1.crombie_p,pct:TOTALS.r1.crombie_p/TOTALS.r1.pts*100,cls:'crombie'},
+      {name:'Erskine-Smith',votes:TOTALS.r1.es_v,pts:TOTALS.r1.es_p,pct:TOTALS.r1.es_p/TOTALS.r1.pts*100,cls:'es'},
+      {name:'Naqvi',votes:TOTALS.r1.naqvi_v,pts:TOTALS.r1.naqvi_p,pct:TOTALS.r1.naqvi_p/TOTALS.r1.pts*100,cls:'naqvi'},
+      {name:'Hsu',votes:TOTALS.r1.hsu_v,pts:TOTALS.r1.hsu_p,pct:TOTALS.r1.hsu_p/TOTALS.r1.pts*100,cls:'hsu',elim:true},
+    ]},
+    {label:'Round 2',sub:'Naqvi eliminated',candidates:[
+      {name:'Crombie',votes:TOTALS.r2.crombie_v,pts:TOTALS.r2.crombie_p,pct:TOTALS.r2.crombie_p/TOTALS.r2.pts*100,cls:'crombie'},
+      {name:'Erskine-Smith',votes:TOTALS.r2.es_v,pts:TOTALS.r2.es_p,pct:TOTALS.r2.es_p/TOTALS.r2.pts*100,cls:'es'},
+      {name:'Naqvi',votes:TOTALS.r2.naqvi_v,pts:TOTALS.r2.naqvi_p,pct:TOTALS.r2.naqvi_p/TOTALS.r2.pts*100,cls:'naqvi',elim:true},
+    ]},
+    {label:'Round 3',sub:'Final result',candidates:[
+      {name:'Crombie',votes:TOTALS.r3.crombie_v,pts:TOTALS.r3.crombie_p,pct:TOTALS.r3.crombie_p/TOTALS.r3.pts*100,cls:'crombie',win:true},
+      {name:'Erskine-Smith',votes:TOTALS.r3.es_v,pts:TOTALS.r3.es_p,pct:TOTALS.r3.es_p/TOTALS.r3.pts*100,cls:'es'},
+    ]},
+  ];
+  grid.innerHTML=rounds.map(rnd=>`
+    <div class="round-card">
+      <div class="round-card-head">
+        <h3>${rnd.label}</h3>
+        <span>${rnd.sub}</span>
+      </div>
+      <div class="round-card-body">
+        ${rnd.candidates.map(c=>`
+          <div class="candidate-row${c.elim?' eliminated':''}">
+            <div class="cand-top">
+              <span class="cand-name">${c.name}${c.elim?'<span class="elim-badge">eliminated</span>':''}${c.win?'<span class="winner-badge">winner</span>':''}</span>
+              <span class="cand-metrics"><span class="cand-votes">${fmtVotes(c.votes)}</span><span class="cand-pts">${fmtPts(c.pts)} pts</span></span>
+            </div>
+            <div class="bar-track"><div class="bar-fill bar-${c.cls}" style="width:${Math.round(c.pct)}%"></div></div>
+            <span class="vote-sub">${Math.round(c.pct*10)/10}% of points</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function buildBenchmarks(){
+  const grid=document.getElementById('benchmark-grid');
+  const groups=[
+    {type:'riding',label:'Ridings'},
+    {type:'student',label:'Student clubs'},
+    {type:'women',label:"Women's clubs"},
+  ];
+  grid.innerHTML=groups.map(g=>{
+    const items=associations.filter(a=>a.type===g.type);
+    const medEligible=median(items.map(a=>a.r1.eligible));
+    const medCast=median(items.map(a=>a.r1.cast));
+    const medPtsPerVote=median(items.map(a=>pointsPerVote(a.r1.pts,a.r1.valid)));
+    return `<div class="benchmark-card">
+      <div class="benchmark-title">${g.label}</div>
+      <div class="benchmark-list">
+        <div class="benchmark-item"><span>Median eligible</span><strong>${fmtVotes(Math.round(medEligible))}</strong></div>
+        <div class="benchmark-item"><span>Median cast</span><strong>${fmtVotes(Math.round(medCast))}</strong></div>
+        <div class="benchmark-item"><span>Median pts/vote</span><strong>${fmtPtsPerVote(medPtsPerVote)}</strong></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── ASSOCIATION LIST ──────────────────────────────────────────────────────────
+let activeFilter='all', sortMode='name', searchQ='';
+
+function highlight(text, q){
+  if(!q) return text;
+  const idx=text.toLowerCase().indexOf(q.toLowerCase());
+  if(idx<0) return text;
+  return text.slice(0,idx)+'<mark>'+text.slice(idx,idx+q.length)+'</mark>'+text.slice(idx+q.length);
+}
+
+function badgeHtml(type){
+  const labels={riding:'Riding',student:'Student club',women:"Women's club"};
+  return `<span class="assoc-badge badge-${type}">${labels[type]}</span>`;
+}
+
+function miniBarHtml(r3, r2, type){
+  const d=r3||r2;
+  if(!d) return '';
+  if(r3){
+    const cp=Math.round(r3.cp), esp=Math.round(r3.esp);
+    return `<div class="mini-bar"><div class="mini-seg bar-crombie" style="width:${cp}%"></div><div class="mini-seg bar-es" style="width:${esp}%"></div></div>`;
+  }
+  return '';
+}
+
+function roundDetailHtml(a){
+  const r1=a.r1;
+  const r2=a.r2;
+  const r3=a.r3;
+  const turnout = r1.eligible ? Math.round((r1.cast/r1.eligible)*1000)/10 : null;
+  let html=`<div class="detail-overview">
+    <div class="detail-stat"><div class="detail-stat-label">Eligible members</div><div class="detail-stat-value">${fmtVotes(r1.eligible)}</div><div class="detail-stat-sub">Membership base in this association</div></div>
+    <div class="detail-stat"><div class="detail-stat-label">Round 1 ballots cast</div><div class="detail-stat-value">${fmtVotes(r1.cast)}</div><div class="detail-stat-sub">${turnout!==null?turnout+'% turnout':''}</div></div>
+    <div class="detail-stat"><div class="detail-stat-label">Round 3 valid ballots</div><div class="detail-stat-value">${fmtVotes(r3.valid)}</div><div class="detail-stat-sub">Final head-to-head count</div></div>
+  </div><div class="rounds-detail">`;
+  // Round 1
+  html+=`<div class="rd-block"><div class="rd-title">Round 1</div>`;
+  [{label:'Crombie',p:r1.cp,v:r1.cv,cls:'crombie'},{label:'Erskine-Smith',p:r1.esp,v:r1.esv,cls:'es'},{label:'Naqvi',p:r1.np,v:r1.nv,cls:'naqvi'},{label:'Hsu',p:r1.hsup,v:r1.hsuv,cls:'hsu',elim:true}]
+    .sort((a,b)=>b.p-a.p)
+    .forEach(c=>{
+      html+=`<div class="rd-row${c.elim?' rd-elim':''}">
+        <div class="rd-cand"><span>${c.label}${c.elim?' ✗':''}</span><span class="rd-votes">${fmtVotes(c.v)}</span></div>
+        <div class="rd-points-line"><span>${fmtVotes(c.v)} votes</span><span class="rd-pts">${pct(c.p)} pts</span></div>
+        <div class="rd-bar-track"><div class="rd-bar-fill bar-${c.cls}" style="width:${Math.round(c.p)}%"></div></div>
+      </div>`;
+    });
+  html+=`<div class="rd-meta"><span>${fmtVotes(r1.cast)} cast</span><span>${fmtVotes(r1.valid)} valid</span><span>${fmtPtsPerVote(pointsPerVote(r1.pts,r1.valid))} pts/vote</span>${r1.invalid>0?`<span>${r1.invalid} invalid</span>`:''}</div>`;
+  html+=`</div>`;
+  // Round 2
+  html+=`<div class="rd-block"><div class="rd-title">Round 2</div>`;
+  [{label:'Crombie',p:r2.cp,v:r2.cv,cls:'crombie'},{label:'Erskine-Smith',p:r2.esp,v:r2.esv,cls:'es'},{label:'Naqvi',p:r2.np,v:r2.nv,cls:'naqvi',elim:true}]
+    .sort((a,b)=>b.p-a.p)
+    .forEach(c=>{
+      html+=`<div class="rd-row${c.elim?' rd-elim':''}">
+        <div class="rd-cand"><span>${c.label}${c.elim?' ✗':''}</span><span class="rd-votes">${fmtVotes(c.v)}</span></div>
+        <div class="rd-points-line"><span>${fmtVotes(c.v)} votes</span><span class="rd-pts">${pct(c.p)} pts</span></div>
+        <div class="rd-bar-track"><div class="rd-bar-fill bar-${c.cls}" style="width:${Math.round(c.p)}%"></div></div>
+      </div>`;
+    });
+  html+=`<div class="rd-meta"><span>${fmtVotes(r2.cast)} cast</span><span>${fmtVotes(r2.valid)} valid</span><span>${fmtPtsPerVote(pointsPerVote(r2.pts,r2.valid))} pts/vote</span>${r2.exhausted>0?`<span>${r2.exhausted} exhausted</span>`:''}</div>`;
+  html+=`</div>`;
+  // Round 3
+  html+=`<div class="rd-block"><div class="rd-title">Round 3</div>`;
+  [{label:'Crombie',p:r3.cp,v:r3.cv,cls:'crombie'},{label:'Erskine-Smith',p:r3.esp,v:r3.esv,cls:'es'}]
+    .sort((a,b)=>b.p-a.p)
+    .forEach(c=>{
+      html+=`<div class="rd-row">
+        <div class="rd-cand"><span>${c.label}</span><span class="rd-votes">${fmtVotes(c.v)}</span></div>
+        <div class="rd-points-line"><span>${fmtVotes(c.v)} votes</span><span class="rd-pts">${pct(c.p)} pts</span></div>
+        <div class="rd-bar-track"><div class="rd-bar-fill bar-${c.cls}" style="width:${Math.round(c.p)}%"></div></div>
+      </div>`;
+    });
+  html+=`<div class="rd-meta"><span>${fmtVotes(r3.cast)} cast</span><span>${fmtVotes(r3.valid)} valid</span><span>${fmtPtsPerVote(pointsPerVote(r3.pts,r3.valid))} pts/vote</span>${r3.exhausted>0?`<span>${r3.exhausted} exhausted</span>`:''}</div>`;
+  html+=`</div>`;
+  html+=`</div>`;
+  return html;
+}
+
+function sortAssociations(list){
+  return [...list].sort((a,b)=>{
+    switch(sortMode){
+      case 'name': return a.name.localeCompare(b.name,'en');
+      case 'crombie_r3_desc': return (b.r3?.cp||0)-(a.r3?.cp||0);
+      case 'es_r3_desc': return (b.r3?.esp||0)-(a.r3?.esp||0);
+      case 'crombie_r1_desc': return (b.r1?.cp||0)-(a.r1?.cp||0);
+      case 'pts_per_vote_desc': return pointsPerVote((b.r1?.pts||0),(b.r1?.valid||0)) - pointsPerVote((a.r1?.pts||0),(a.r1?.valid||0));
+      case 'eligible_desc': return (b.r1?.eligible||0)-(a.r1?.eligible||0);
+      case 'votes_cast_desc': return (b.r1?.cast||0)-(a.r1?.cast||0);
+      default: return 0;
+    }
+  });
+}
+
+function renderList(){
+  const q=searchQ.trim().toLowerCase();
+  let filtered=associations.filter(a=>{
+    if(activeFilter!=='all' && a.type!==activeFilter) return false;
+    if(q && !a.name.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  filtered=sortAssociations(filtered);
+
+  const listEl=document.getElementById('assoc-list');
+  const emptyEl=document.getElementById('empty-state');
+  const countEl=document.getElementById('result-count');
+
+  countEl.textContent=`${filtered.length} result${filtered.length!==1?'s':''}`;
+
+  if(filtered.length===0){listEl.innerHTML='';emptyEl.style.display='block';return;}
+  emptyEl.style.display='none';
+
+  listEl.innerHTML=filtered.map((a,i)=>{
+    const mini=miniBarHtml(a.r3,a.r2,a.type);
+    const leadCand=a.r3?(a.r3.cp>=a.r3.esp?'Crombie':'Erskine-Smith'):'—';
+    const leadPct=a.r3?(a.r3.cp>=a.r3.esp?a.r3.cp:a.r3.esp):null;
+    const ptsPerVote = pointsPerVote(a.r1.pts,a.r1.valid);
+    return `<div class="assoc-item" tabindex="0" role="listitem" data-idx="${i}" data-id="${a.name.replace(/[^a-z0-9]/gi,'_')}">
+      <div class="assoc-header">
+        <div class="assoc-left">
+          ${badgeHtml(a.type)}
+          <span class="assoc-name">${highlight(a.name,searchQ.trim())}</span>
+        </div>
+        <div class="assoc-summary">
+          <span class="assoc-meta-chip">${fmtVotes(a.r1.cast)} cast</span>
+          <span class="assoc-meta-chip">${fmtPtsPerVote(ptsPerVote)} pts/vote</span>
+          ${mini}
+          ${leadPct!==null?`<span style="font-size:12px;color:var(--gray-600);white-space:nowrap">${leadCand} ${Math.round(leadPct*10)/10} pts</span>`:''}
+          <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="assoc-detail">${roundDetailHtml(a)}</div>
+    </div>`;
+  }).join('');
+
+  // Toggle open
+  listEl.querySelectorAll('.assoc-item').forEach(el=>{
+    const toggle=()=>{
+      el.classList.toggle('open');
+      el.setAttribute('aria-expanded',el.classList.contains('open'));
+    };
+    el.addEventListener('click',toggle);
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+  });
+}
+
+// ── FILTERS / SEARCH ──────────────────────────────────────────────────────────
+document.getElementById('search-input').addEventListener('input',e=>{
+  searchQ=e.target.value;
+  renderList();
+});
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter=btn.dataset.filter;
+    renderList();
+  });
+});
+document.getElementById('sort-select').addEventListener('change',e=>{
+  sortMode=e.target.value;
+  renderList();
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildRoundCards();
+buildBenchmarks();
+renderList();
+</script>
+</body>
+</html>
